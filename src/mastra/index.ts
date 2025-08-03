@@ -5,6 +5,7 @@ import { LibSQLStore } from '@mastra/libsql';
 import { weatherWorkflow } from './workflows/weather-workflow';
 import { weatherAgent } from './agents/weather-agent';
 import { registerApiRoute } from '@mastra/core/server';
+import { messagingApi, WebhookEvent } from '@line/bot-sdk';
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
@@ -31,10 +32,31 @@ export const mastra = new Mastra({
       registerApiRoute("/webhook", {
         method: "POST",
         handler: async (c) => {
-          // const mastra = c.get("mastra");
-          // const agents = await mastra.getAgent("my-agent");
+          const client = new messagingApi.MessagingApiClient({
+            channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN || '',
+          });
  
-          return c.json({ message: "POST /webhook Hello, world!" });
+          const body = await c.req.json();
+          const events: WebhookEvent[] = body.events;
+ 
+          const promises = events.map(async (event: WebhookEvent) => {
+            if (event.type !== "message" || event.message.type !== "text") {
+              return Promise.resolve(null);
+            }
+ 
+            return client.replyMessage({
+              replyToken: event.replyToken,
+              messages: [{ type: "text", text: event.message.text }],
+            });
+          });
+ 
+          try {
+            await Promise.all(promises);
+          } catch (err) {
+            console.error(err);
+          }
+ 
+          return c.json({ message: "ok" });
         },
       }),
     ],
