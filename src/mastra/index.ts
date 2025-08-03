@@ -5,7 +5,13 @@ import { LibSQLStore } from '@mastra/libsql';
 import { weatherWorkflow } from './workflows/weather-workflow';
 import { weatherAgent } from './agents/weather-agent';
 import { registerApiRoute } from '@mastra/core/server';
-import { messagingApi, WebhookEvent } from '@line/bot-sdk';
+import { hander as handerAsGet } from './apis/webhook/get';
+import { hander as handerAsPost } from './apis/webhook/post';
+
+const logger = new PinoLogger({
+  name: 'Default',
+  level: 'info',
+});
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
@@ -22,40 +28,23 @@ export const mastra = new Mastra({
     apiRoutes: [
       registerApiRoute("/webhook", {
         method: "GET",
-        handler: async (c) => {
-          return c.json({ message: "GET /webhook OK" });
-        },
+        handler: handerAsGet,
       }),
       registerApiRoute("/webhook", {
         method: "POST",
-        handler: async (c) => {
-          const client = new messagingApi.MessagingApiClient({
-            channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN || '',
-          });
- 
-          const body = await c.req.json();
-          const events: WebhookEvent[] = body.events;
- 
-          const promises = events.map(async (event: WebhookEvent) => {
-            if (event.type !== "message" || event.message.type !== "text") {
-              return Promise.resolve(null);
-            }
- 
-            return client.replyMessage({
-              replyToken: event.replyToken,
-              messages: [{ type: "text", text: event.message.text }],
-            });
-          });
- 
-          try {
-            await Promise.all(promises);
-          } catch (err) {
-            console.error(err);
-          }
- 
-          return c.json({ message: "ok" });
-        },
+        handler: handerAsPost,
       }),
+    ],
+    middleware: [
+      async (c, next) => {
+        if (['/api/telemetry', '/__refresh', '/refresh-events'].reduce((acc, path) => acc || c.req.url.includes(path), false)) {
+          return next();
+        }
+
+        logger.info(`[START] ${c.req.method} ${c.req.url}`);
+        await next();
+        logger.info(`[END  ] ${c.req.method} ${c.req.url}`);
+      },
     ],
   },
 });
