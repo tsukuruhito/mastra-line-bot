@@ -1,0 +1,28 @@
+{
+  "theme": "GitHub",
+  "selectedAuthType": "oauth-personal",
+  "preferredEditor": "vscode",
+  "mcpServers": {
+    "mastra-doc": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mastra/mcp-docs-server"
+      ],
+      "type": "stdio"
+    },
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--project",
+        "."
+      ]
+    }
+  }
+}
