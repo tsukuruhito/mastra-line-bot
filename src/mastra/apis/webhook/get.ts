@@ -1,11 +1,13 @@
-import { Mastra } from "@mastra/core";
-import { Handler } from "hono";
+import { registerApiRoute } from "@mastra/core/server";
 
-export const hander: Handler<{ Variables: { mastra: Mastra } }> = async (c) => {
-  const mastra = c.get("mastra");
-  const weatherAgent = await mastra.getAgent("weatherAgent");
+export const route = registerApiRoute("/webhook", {
+  method: "GET",
+  handler: async (c) => {
+    const mastra = c.get("mastra");
+    const weatherAgent = await mastra.getAgent("weatherAgent");
 
-  const forecast = await weatherAgent.generate("東京の天気は？");
+    const forecast = await weatherAgent.generate("東京の天気は？");
 
-  return c.json({ message: forecast.text });
-};
+    return c.json({ message: forecast.text });
+  },
+});

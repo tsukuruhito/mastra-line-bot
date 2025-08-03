@@ -4,14 +4,9 @@ import { PinoLogger } from '@mastra/loggers';
 import { LibSQLStore } from '@mastra/libsql';
 import { weatherWorkflow } from './workflows/weather-workflow';
 import { weatherAgent } from './agents/weather-agent';
-import { registerApiRoute } from '@mastra/core/server';
-import { hander as handerAsGet } from './apis/webhook/get';
-import { hander as handerAsPost } from './apis/webhook/post';
-
-const logger = new PinoLogger({
-  name: 'Default',
-  level: 'info',
-});
+import { route as getWebhook } from './apis/webhook/get';
+import { route as postWebhook } from './apis/webhook/post';
+import { process as requestLog } from './middlewares/requestLog';
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
@@ -26,25 +21,11 @@ export const mastra = new Mastra({
   }),
   server: {
     apiRoutes: [
-      registerApiRoute("/webhook", {
-        method: "GET",
-        handler: handerAsGet,
-      }),
-      registerApiRoute("/webhook", {
-        method: "POST",
-        handler: handerAsPost,
-      }),
+      getWebhook,
+      postWebhook,
     ],
     middleware: [
-      async (c, next) => {
-        if (['/api/telemetry', '/__refresh', '/refresh-events'].reduce((acc, path) => acc || c.req.url.includes(path), false)) {
-          return next();
-        }
-
-        logger.info(`[START] ${c.req.method} ${c.req.url}`);
-        await next();
-        logger.info(`[END  ] ${c.req.method} ${c.req.url}`);
-      },
+      requestLog,
     ],
   },
 });
