@@ -4,10 +4,10 @@ export const route = registerApiRoute("/webhook", {
   method: "GET",
   handler: async (c) => {
     const mastra = c.get("mastra");
-    const weatherAgent = await mastra.getAgent("weatherAgent");
+    const agent = await mastra.getAgent("secretaryAgent");
 
-    const forecast = await weatherAgent.generate("東京の天気は？");
+    const { text } = await agent.generate("テニスに関するページを取得して");
 
-    return c.json({ message: forecast.text });
+    return c.json({ message: text });
   },
 });

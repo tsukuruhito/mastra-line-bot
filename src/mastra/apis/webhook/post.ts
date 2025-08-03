@@ -8,7 +8,7 @@ export const route = registerApiRoute("/webhook", {
     const weatherAgent = await mastra.getAgent("weatherAgent");
 
     const client = new messagingApi.MessagingApiClient({
-      channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN || "",
+      channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || "",
     });
 
     const body = await c.req.json();
