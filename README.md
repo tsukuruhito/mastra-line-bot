@@ -26,6 +26,18 @@ Mastraフレームワークを使ったLINE向け天気情報ボットです。
    npm run dev
    ```
 
+## 環境変数
+
+このプロジェクトを実行するには、以下の環境変数を設定した`.env`ファイルを作成する必要があります。
+
+| 変数名                      | 説明                                                                         |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| `ANTHROPIC_API_KEY`         | Anthropic APIを利用するためのAPIキー。Mastra Agentが使用します。               |
+| `LINE_CHANNEL_ACCESS_TOKEN` | LINE Messaging APIのチャネルアクセストークン（長期）。Botがメッセージを送受信するために必要です。 |
+| `LINE_CHANNEL_SECRET`       | LINE Messaging APIのチャネルシークレット。Webhookの署名検証などに使用します。    |
+| `NOTION_API_KEY`            | Notion APIと連携するためのインテグレーションキー。Notion関連のツールで使用します。 |
+
+
 
 ## 使い方
 
