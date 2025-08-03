@@ -20,13 +20,10 @@ export const mastra = new Mastra({
   }),
   server: {
     apiRoutes: [
-      registerApiRoute("/", {
+      registerApiRoute("/webhook", {
         method: "GET",
         handler: async (c) => {
-          // const mastra = c.get("mastra");
-          // const agents = await mastra.getAgent("my-agent");
- 
-          return c.json({ message: "GET / Hello, world!" });
+          return c.json({ message: "GET /webhook OK" });
         },
       }),
       registerApiRoute("/webhook", {
