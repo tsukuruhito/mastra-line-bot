@@ -1,4 +1,3 @@
-import { PinoLogger } from "@mastra/loggers";
 import { MCPClient } from "@mastra/mcp";
 
 const GITHUB_PAT = process.env.GITHUB_PAT;
@@ -21,14 +20,5 @@ export const mcp = new MCPClient({
         },
       },
     },
-    line_bot: {
-      command: "npx",
-      args: [
-        "@line/line-bot-mcp-server"
-      ],
-      env: {
-        CHANNEL_ACCESS_TOKEN: LINE_CHANNEL_ACCESS_TOKEN,
-      }
-    }
   },
 });
