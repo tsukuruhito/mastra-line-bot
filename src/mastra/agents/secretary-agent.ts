@@ -28,9 +28,9 @@ export const secretaryAgent = new Agent({
   `,
   model: anthropic('claude-3-5-sonnet-20241022'),
   tools: await mcp.getTools(),
-  memory: new Memory({
-    storage: new LibSQLStore({
-      url: 'file:../mastra.db', // path is relative to the .mastra/output directory
-    }),
-  }),
+  // memory: new Memory({
+  //   storage: new LibSQLStore({
+  //     url: 'file:../mastra.db', // path is relative to the .mastra/output directory
+  //   }),
+  // }),
 });
