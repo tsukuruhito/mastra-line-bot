@@ -1,3 +1,10 @@
 {
-  "postCreateCommand": "npm install -g @google/gemini-cli && pip install uv"
+  "postCreateCommand": "npm install -g @google/gemini-cli && pip install uv",
+  "forwardPorts": [4111],
+  "portsAttributes": {
+    "4111": {
+      "visibility": "public",
+      "label": "LINE Bot Webhook"
+    }
+  }
 }

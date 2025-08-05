@@ -1,8 +1,5 @@
 {
   "servers": {
-    "notion": {
-      "url": "https://mcp.notion.com/mcp"
-    },
     "github": {
       "url": "https://api.githubcopilot.com/mcp/"
     },

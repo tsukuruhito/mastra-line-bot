@@ -1,12 +1,12 @@
-import { anthropic } from '@ai-sdk/anthropic';
 import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { mcp } from '../tools/secretary-tool';
+import { google } from '@ai-sdk/google';
 
 const params = {
-  userName: "光岡 高宏",
-  githubAccount: "mitsuoka0423",
+  userName: "Tsuku",
+  githubAccount: "tsukuruhito",
 }
 
 export const secretaryAgent = new Agent({
@@ -26,7 +26,7 @@ export const secretaryAgent = new Agent({
 
     - GitHubアカウント: ${params.githubAccount}
   `,
-  model: anthropic('claude-3-5-sonnet-20241022'),
+  model: google("gemini-2.5-pro"),
   tools: await mcp.getTools(),
   // memory: new Memory({
   //   storage: new LibSQLStore({
